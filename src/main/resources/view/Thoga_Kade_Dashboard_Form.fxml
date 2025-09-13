@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane prefHeight="550.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.DashbordController">
+   <children>
+      <Label layoutX="185.0" layoutY="21.0" text="Thoga Kade Dashboard">
+         <font>
+            <Font name="Century" size="35.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>
