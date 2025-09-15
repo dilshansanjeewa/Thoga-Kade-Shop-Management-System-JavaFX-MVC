@@ -3,6 +3,7 @@ package controller.dashboardController;
 import db.DBConection;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import model.dto.Item;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -33,7 +34,7 @@ public class DashboardManagementController implements DashboardManagementInterfa
     }
 
     @Override
-    public String[] getCustomer(String ID) {
+    public String[] searchCustomer(String ID) {
         try {
             PreparedStatement preparedStatement = DBConection.getInstance().getConnection().prepareStatement("SELECT CustTitle,CustName FROM customer WHERE CustID = ?;");
             preparedStatement.setObject(1, ID);
@@ -61,6 +62,29 @@ public class DashboardManagementController implements DashboardManagementInterfa
                 itemCodeList.add(resultSet.getString("ItemCode"));
             }
             return itemCodeList;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public Item searchItem(String code) {
+        try {
+            PreparedStatement preparedStatement = DBConection.getInstance().getConnection().prepareStatement("SELECT Description,PackSize,UnitPrice,QtyOnHand FROM item WHERE ItemCode = ?;");
+            preparedStatement.setObject(1,code);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()){
+                return new Item(
+                        code,
+                        resultSet.getString("Description"),
+                        resultSet.getString("PackSize"),
+                        resultSet.getDouble("UnitPrice"),
+                        resultSet.getInt("QtyOnHand")
+                );
+            }
+            return null;
 
         } catch (SQLException e) {
             throw new RuntimeException(e);

@@ -9,6 +9,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import model.dto.Item;
 
 import java.net.URL;
 import java.time.LocalDate;
@@ -152,13 +153,17 @@ public class DashbordFormController implements Initializable {
 
     @FXML
     void comboCustIdOnAction(ActionEvent event) {
-        String[] customer = dashboardManagement.getCustomer(comboCustId.getValue());
+        String[] customer = dashboardManagement.searchCustomer(comboCustId.getValue());
         lblName.setText(customer[0]+"."+customer[1]);
     }
 
     @FXML
     void comboItemCodeOnAction(ActionEvent event) {
-
+        Item item = dashboardManagement.searchItem(comboItemCode.getValue());
+        lblDescription.setText(item.getDescription());
+        lblPackSize.setText(item.getPackSize());
+        lblUnitPrice.setText(String.valueOf(item.getUnitPrice()));
+        lblQtyOnHand.setText(String.valueOf(item.getQtyOnHand()));
     }
 
     @FXML
@@ -174,7 +179,6 @@ public class DashbordFormController implements Initializable {
     }
 
     private LocalDate getData(){
-
         return LocalDate.now();
     }
 
