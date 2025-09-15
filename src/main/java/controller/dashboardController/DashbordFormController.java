@@ -1,15 +1,20 @@
-package controller;
+package controller.dashboardController;
 
 import com.jfoenix.controls.JFXTextField;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
-public class DashbordController {
+import java.net.URL;
+import java.time.LocalDate;
+import java.util.ResourceBundle;
+
+public class DashbordFormController implements Initializable {
 
     @FXML
     private Button btnAdd;
@@ -60,10 +65,10 @@ public class DashbordController {
     private TableColumn<?, ?> colUnitPrice;
 
     @FXML
-    private ComboBox<?> comboCustId;
+    private ComboBox<String> comboCustId;
 
     @FXML
-    private ComboBox<?> comboItemCode;
+    private ComboBox<String> comboItemCode;
 
     @FXML
     private Label lblDate;
@@ -97,6 +102,8 @@ public class DashbordController {
 
     @FXML
     private JFXTextField txtQty;
+
+    DashboardManagementInterface dashboardManagement = new DashboardManagementController();
 
     @FXML
     void btnAddItemOnAction(ActionEvent event) {
@@ -145,7 +152,8 @@ public class DashbordController {
 
     @FXML
     void comboCustIdOnAction(ActionEvent event) {
-
+        String[] customer = dashboardManagement.getCustomer(comboCustId.getValue());
+        lblName.setText(customer[0]+"."+customer[1]);
     }
 
     @FXML
@@ -158,4 +166,23 @@ public class DashbordController {
 
     }
 
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        lblDate.setText(getData().toString());
+        loadCustId();
+        loadItemCode();
+    }
+
+    private LocalDate getData(){
+
+        return LocalDate.now();
+    }
+
+    private void loadCustId(){
+        comboCustId.setItems(dashboardManagement.getAllCustomerId());
+    }
+
+    private void loadItemCode(){
+        comboItemCode.setItems(dashboardManagement.getAllItemCode());
+    }
 }
