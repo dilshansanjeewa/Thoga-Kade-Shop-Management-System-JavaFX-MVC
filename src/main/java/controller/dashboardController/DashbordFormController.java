@@ -162,8 +162,11 @@ public class DashbordFormController implements Initializable {
                     calculateTotal(netTotal);
                     calculateDiscount((int) totalDiscount);
                 }else {
-                    System.out.println("index: "+index);
+
                 }
+
+                txtQty.setText(null);
+                txtDescount.setText("00");
 
             }catch (NumberFormatException e){
                 JOptionPane.showMessageDialog(null, "Please Input valid number...");
@@ -173,7 +176,7 @@ public class DashbordFormController implements Initializable {
 
     @FXML
     void btnCancleOrderOnAction(ActionEvent event) {
-
+        clearData();
     }
 
     @FXML
@@ -246,6 +249,9 @@ public class DashbordFormController implements Initializable {
 
     @FXML
     void comboItemCodeOnAction(ActionEvent event) {
+        if (comboItemCode.getValue()==null){
+            return;
+        }
         Item item = dashboardManagement.searchItem(comboItemCode.getValue());
         lblDescription.setText(item.getDescription());
         lblPackSize.setText(item.getPackSize());
@@ -297,6 +303,8 @@ public class DashbordFormController implements Initializable {
     }
 
     private int isAlreadyExsist(String itemCode, ObservableList<OrderItemDetails> list){
+        System.out.println(itemCode);
+        System.out.println(list);
 
         for (int i = 0; i < list.size(); i++) {
             if (itemCode.equals(list.get(i).getItemCode())){
@@ -322,6 +330,25 @@ public class DashbordFormController implements Initializable {
 
     private void setDiscount(int discount) {
         lblDescount.setText(discount+".00");
+    }
+
+    private void clearData(){
+        comboCustId.setValue(null);
+        lblName.setText(null);
+        comboItemCode.setDisable(true);
+        comboItemCode.setValue(null);
+        lblDescription.setText(null);
+        lblPackSize.setText(null);
+        lblUnitPrice.setText(null);
+        lblQtyOnHand.setText(null);
+        txtQty.setText(null);
+        txtDescount.setText("00");
+        orderItemDetailList.clear();
+        tblOrderDetails.setItems(orderItemDetailList);
+        total=0.0;
+        setTotal(total);
+        discount=0;
+        setDiscount(discount);
     }
 
 }
