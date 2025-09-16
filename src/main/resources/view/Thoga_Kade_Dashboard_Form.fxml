@@ -28,7 +28,7 @@
                   <Font name="Century Gothic Bold" size="23.0" />
                </font>
             </Label>
-            <Button fx:id="btnNewCustomer" layoutX="6.0" layoutY="77.0" mnemonicParsing="false" onAction="#btnNewCustomerOnAction" prefHeight="38.0" prefWidth="146.0" style="-fx-background-radius: 25; -fx-background-color: LIME;" text="New Customer">
+            <Button fx:id="btnNewCustomer" layoutX="6.0" layoutY="77.0" mnemonicParsing="false" onAction="#btnNewCustomerOnAction" prefHeight="38.0" prefWidth="146.0" style="-fx-background-radius: 20; -fx-background-color: LIME;" text="New Customer">
                <font>
                   <Font name="Sylfaen" size="19.0" />
                </font>
@@ -185,50 +185,56 @@
             </Label>
          </children>
       </AnchorPane>
-      <TableView fx:id="tblOrderDetails" layoutX="14.0" layoutY="245.0" prefHeight="410.0" prefWidth="860.0">
+      <TableView fx:id="tblOrderDetails" layoutX="14.0" layoutY="245.0" prefHeight="410.0" prefWidth="956.0">
         <columns>
           <TableColumn fx:id="colItemCode" prefWidth="87.19997882843018" text="Item Code" />
           <TableColumn fx:id="colDescription" prefWidth="308.79996490478516" text="Description" />
             <TableColumn fx:id="colPackSize" prefWidth="97.60003662109375" text="Pack Size" />
             <TableColumn fx:id="colUnitPrice" prefWidth="103.19998168945312" text="Unit Price" />
-            <TableColumn fx:id="colQty" prefWidth="85.60003662109375" text="QTY" />
-            <TableColumn fx:id="colDescount" prefWidth="84.0" text="Discount" />
-            <TableColumn fx:id="colTotal" prefWidth="91.199951171875" text="Total" />
+            <TableColumn fx:id="colDescount" prefWidth="85.60003662109375" text="Discount" />
+            <TableColumn fx:id="colQty" prefWidth="84.0" text="QTY" />
+            <TableColumn fx:id="colTotalDiscount" prefWidth="91.199951171875" text="Total Discount" />
+            <TableColumn fx:id="colTotal" prefWidth="96.0" text="Net Total" />
         </columns>
       </TableView>
-      <Label layoutX="899.0" layoutY="245.0" text="Item QTY :" textFill="DARKBLUE">
+      <Label layoutX="1012.0" layoutY="248.0" text="Item QTY :" textFill="DARKBLUE">
          <font>
             <Font name="Calisto MT Bold" size="28.0" />
          </font>
       </Label>
-      <JFXTextField fx:id="txtQty" alignment="CENTER" focusColor="DARKBLUE" layoutX="1045.0" layoutY="242.0" onAction="#txtQtyOnAction" prefHeight="43.0" prefWidth="100.0">
+      <JFXTextField fx:id="txtQty" alignment="CENTER" focusColor="DARKBLUE" layoutX="1177.0" layoutY="245.0" onAction="#txtQtyOnAction" prefHeight="43.0" prefWidth="100.0">
          <font>
             <Font name="Calibri" size="20.0" />
          </font>
       </JFXTextField>
-      <Label layoutX="899.0" layoutY="307.0" text="Discount   :" textFill="GREEN">
+      <Label layoutX="1012.0" layoutY="312.0" text="Discount   :" textFill="GREEN">
          <font>
             <Font name="Calisto MT Bold" size="28.0" />
          </font>
       </Label>
-      <JFXTextField fx:id="txtDescount" alignment="CENTER" focusColor="GREEN" layoutX="1045.0" layoutY="304.0" prefHeight="43.0" prefWidth="100.0" text="00.00">
+      <JFXTextField fx:id="txtDescount" alignment="CENTER" focusColor="GREEN" layoutX="1177.0" layoutY="309.0" prefHeight="43.0" prefWidth="100.0" text="00">
          <font>
             <Font name="Calibri" size="20.0" />
          </font>
       </JFXTextField>
-      <Button fx:id="btnAdd" layoutX="1213.0" layoutY="306.0" mnemonicParsing="false" onAction="#btnAddOnAction" style="-fx-background-radius: 10; -fx-background-color: DARKKHAKI;" text="ADD">
+      <Button fx:id="btnAdd" layoutX="1013.0" layoutY="390.0" mnemonicParsing="false" onAction="#btnAddOnAction" prefHeight="36.0" prefWidth="107.0" style="-fx-background-radius: 10; -fx-background-color: DARKKHAKI;" text="ADD">
          <font>
-            <Font name="Century" size="20.0" />
+            <Font name="Century" size="18.0" />
          </font>
       </Button>
-      <Button fx:id="btnPlaceOrder" layoutX="942.0" layoutY="607.0" mnemonicParsing="false" onAction="#btnPlaceOrderOnAction" prefHeight="48.0" prefWidth="139.0" style="-fx-background-color: CORAL; -fx-background-radius: 10;" text="Place Order" textFill="WHITE">
+      <Button fx:id="btnPlaceOrder" layoutX="997.0" layoutY="607.0" mnemonicParsing="false" onAction="#btnPlaceOrderOnAction" prefHeight="48.0" prefWidth="139.0" style="-fx-background-color: CORAL; -fx-background-radius: 10;" text="Place Order" textFill="WHITE">
          <font>
             <Font name="Dubai Bold" size="20.0" />
          </font>
       </Button>
-      <Button fx:id="btnCancleOrder" layoutX="1116.0" layoutY="607.0" mnemonicParsing="false" onAction="#btnCancleOrderOnAction" style="-fx-background-color: INDIANRED; -fx-background-radius: 10;" text="Cancle Order" textFill="WHITE">
+      <Button fx:id="btnCancleOrder" layoutX="1161.0" layoutY="607.0" mnemonicParsing="false" onAction="#btnCancleOrderOnAction" style="-fx-background-color: INDIANRED; -fx-background-radius: 10;" text="Cancle Order" textFill="WHITE">
          <font>
             <Font name="Dubai Bold" size="20.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnRemove" layoutX="1177.0" layoutY="390.0" mnemonicParsing="false" onAction="#btnRemoveOnAction" style="-fx-background-radius: 10; -fx-background-color: DARKKHAKI;" text="REMOVE">
+         <font>
+            <Font name="Century" size="18.0" />
          </font>
       </Button>
    </children>
