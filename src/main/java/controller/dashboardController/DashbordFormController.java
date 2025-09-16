@@ -124,6 +124,10 @@ public class DashbordFormController implements Initializable {
 
     @FXML
     void btnAddOnAction(ActionEvent event) {
+        if(comboItemCode.getValue()==null){
+            JOptionPane.showMessageDialog(null, "Please select an item to prepair the order...");
+            return;
+        }
         if (checktxtQty()){
             try {
                 String itemCode = comboItemCode.getValue();
@@ -155,11 +159,11 @@ public class DashbordFormController implements Initializable {
                 if (index<0){
                     orderItemDetailList.add(newOrderItemDetails);
                     tblOrderDetails.setItems(orderItemDetailList);
+                    calculateTotal(netTotal);
+                    calculateDiscount((int) totalDiscount);
                 }else {
                     System.out.println("index: "+index);
                 }
-                calculateTotal(netTotal);
-                calculateDiscount((int) totalDiscount);
 
             }catch (NumberFormatException e){
                 JOptionPane.showMessageDialog(null, "Please Input valid number...");
@@ -206,6 +210,10 @@ public class DashbordFormController implements Initializable {
     void btnRemoveOnAction(ActionEvent event) {
         TableView.TableViewSelectionModel<OrderItemDetails> selectionModel = tblOrderDetails.getSelectionModel();
         OrderItemDetails selectedItem = selectionModel.getSelectedItem();
+        if(selectedItem == null){
+            JOptionPane.showMessageDialog(null, "Please select an item to remove...");
+            return;
+        }
         orderItemDetailList = tblOrderDetails.getItems();
         ObservableList<OrderItemDetails> orderItemDetailList1 = removeItem(selectedItem, orderItemDetailList);
         tblOrderDetails.setItems(orderItemDetailList1);
@@ -215,8 +223,15 @@ public class DashbordFormController implements Initializable {
         for (int i = 0; i < orderItemDetailList.size(); i++) {
             if (selectedItem.getItemCode().equals(orderItemDetailList.get(i).getItemCode())){
                 orderItemDetailList.remove(i);
-                setTotal(total- selectedItem.getNetTotal());
-                setDiscount(discount- selectedItem.getDiscount());
+                if (orderItemDetailList.isEmpty()){
+                    total=0;
+                    discount=0;
+                    setTotal(00);
+                    setDiscount(00);
+                }else {
+                    calculateTotal(-selectedItem.getNetTotal());
+                    calculateDiscount(-selectedItem.getDiscount());
+                }
             }
         }
         return orderItemDetailList;
@@ -224,6 +239,7 @@ public class DashbordFormController implements Initializable {
 
     @FXML
     void comboCustIdOnAction(ActionEvent event) {
+        if(comboCustId.getValue() != null)comboItemCode.setDisable(false);
         String[] customer = dashboardManagement.searchCustomer(comboCustId.getValue());
         lblName.setText(customer[0]+"."+customer[1]);
     }
@@ -239,7 +255,7 @@ public class DashbordFormController implements Initializable {
 
     @FXML
     void txtQtyOnAction(ActionEvent event) {
-
+        btnAddOnAction(event);
     }
 
     @Override
