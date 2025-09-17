@@ -4,10 +4,14 @@ import db.DBConection;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import model.dto.Item;
+import model.dto.Order;
+import model.dto.OrderDetail;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class DashboardManagementController implements DashboardManagementInterface{
 
@@ -89,5 +93,78 @@ public class DashboardManagementController implements DashboardManagementInterfa
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public String getLastOrderId() {
+        try {
+            ResultSet resultSet = DBConection.getInstance().getConnection().prepareStatement(" SELECT OrderID FROM orders ORDER BY OrderID DESC LIMIT 1;").executeQuery();
+            if (resultSet.next()) return resultSet.getString("OrderID");
+            else return null;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private boolean addOrder(String orderId, LocalDate today, String custId) {
+        try {
+            PreparedStatement preparedStatement = DBConection.getInstance().getConnection().prepareStatement("INSERT INTO Orders VALUES (?, ?, ?);");
+            preparedStatement.setObject(1,orderId);
+            preparedStatement.setObject(2,today);
+            preparedStatement.setObject(3,custId);
+
+            return preparedStatement.executeUpdate()>0;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private boolean addOrderdetails(ArrayList<OrderDetail>orderDetailArrayList){
+        try {
+            PreparedStatement preparedStatement = DBConection.getInstance().getConnection().prepareStatement("INSERT INTO orderdetail VALUES (?, ?, ?, ?);");
+            for (OrderDetail orderDetail : orderDetailArrayList){
+
+                preparedStatement.setObject(1,orderDetail.getOrderId());
+                preparedStatement.setObject(2,orderDetail.getItemCode());
+                preparedStatement.setObject(3,orderDetail.getOrderQty());
+                preparedStatement.setObject(4,orderDetail.getDiscount());
+
+                if(preparedStatement.executeUpdate()>0){
+                    if(!updateitemQty(orderDetail.getItemCode(), orderDetail.getOrderQty())){
+                        return false;
+                    }
+                }
+
+            }
+            return true;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private boolean updateitemQty(String itemCode, int qty){
+        try {
+            PreparedStatement preparedStatement = DBConection.getInstance().getConnection().prepareStatement("UPDATE item SET QtyOnHand = QtyOnHand-? WHERE ItemCode = ?;");
+            preparedStatement.setObject(1,qty);
+            preparedStatement.setObject(2,itemCode);
+
+            if(preparedStatement.executeUpdate()>0){
+                return true;
+            }else {
+                return false;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public boolean addOrder(Order order) {
+        if(addOrder(order.getOrderId(), order.getToday(), order.getCustId())){
+            if(addOrderdetails(order.getOrderDetailArrayList())){
+                return true;
+            }
+        }
+        return false;
     }
 }

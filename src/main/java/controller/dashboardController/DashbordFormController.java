@@ -10,11 +10,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import model.dto.Item;
+import model.dto.Order;
+import model.dto.OrderDetail;
 import model.dto.OrderItemDetails;
 
 import javax.swing.*;
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class DashbordFormController implements Initializable {
@@ -116,6 +119,7 @@ public class DashbordFormController implements Initializable {
     ObservableList<OrderItemDetails> orderItemDetailList = FXCollections.observableArrayList();
     double total;
     int discount;
+    String orderId;
 
     @FXML
     void btnAddItemOnAction(ActionEvent event) {
@@ -201,6 +205,20 @@ public class DashbordFormController implements Initializable {
 
     @FXML
     void btnPlaceOrderOnAction(ActionEvent event) {
+        ObservableList<OrderItemDetails> items = tblOrderDetails.getItems();
+        if (items.isEmpty()){
+            JOptionPane.showMessageDialog(null, "Please add Items to plase the order...");
+            return;
+        }
+
+        Order order = createOrder(createOrderDetails());
+        boolean b = dashboardManagement.addOrder(order);
+        if(b){
+            JOptionPane.showMessageDialog(null, "Order has been placed successfully.....");
+            clearData();
+        }else {
+            JOptionPane.showMessageDialog(null, ".....");
+        }
 
     }
 
@@ -279,6 +297,8 @@ public class DashbordFormController implements Initializable {
         colTotalDiscount.setCellValueFactory(new PropertyValueFactory<>("totalDiscount"));
         colTotal.setCellValueFactory(new PropertyValueFactory<>("netTotal"));
 
+        generateOrderId();
+
     }
 
     private LocalDate getData(){
@@ -303,9 +323,6 @@ public class DashbordFormController implements Initializable {
     }
 
     private int isAlreadyExsist(String itemCode, ObservableList<OrderItemDetails> list){
-        System.out.println(itemCode);
-        System.out.println(list);
-
         for (int i = 0; i < list.size(); i++) {
             if (itemCode.equals(list.get(i).getItemCode())){
                 return i;
@@ -350,5 +367,36 @@ public class DashbordFormController implements Initializable {
         discount=0;
         setDiscount(discount);
     }
+
+    private String generateOrderId(){
+        String newid=String.format("D%03d",Integer.parseInt(dashboardManagement.getLastOrderId().substring(1))+1);
+        orderId = newid;
+        return newid;
+    }
+
+    private Order createOrder(ArrayList<OrderDetail> orderDetailArrayList){
+
+        return new Order(
+                orderId,
+                getData(),
+                comboCustId.getValue(),
+                orderDetailArrayList
+        );
+    }
+
+    private ArrayList<OrderDetail> createOrderDetails(){
+        ObservableList<OrderItemDetails> items = tblOrderDetails.getItems();
+        ArrayList<OrderDetail>orderDetailArrayList = new ArrayList<>();
+        for(OrderItemDetails ob:items){
+            orderDetailArrayList.add(new OrderDetail(
+                    orderId,
+                    ob.getItemCode(),
+                    ob.getQty(),
+                    ob.getDiscount()
+            ));
+        }
+        return orderDetailArrayList;
+    }
+
 
 }
