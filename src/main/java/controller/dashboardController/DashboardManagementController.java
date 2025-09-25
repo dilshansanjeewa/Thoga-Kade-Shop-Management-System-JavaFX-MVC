@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class DashboardManagementController implements DashboardManagementInterface{
+public class DashboardManagementController implements DashboardManagementInterface {
 
     ObservableList<String> custIdList = FXCollections.observableArrayList();
     ObservableList<String> itemCodeList = FXCollections.observableArrayList();

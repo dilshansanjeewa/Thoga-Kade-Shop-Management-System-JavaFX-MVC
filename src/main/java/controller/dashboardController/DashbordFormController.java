@@ -1,20 +1,23 @@
 package controller.dashboardController;
 
 import com.jfoenix.controls.JFXTextField;
-import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 import model.dto.Item;
 import model.dto.Order;
 import model.dto.OrderDetail;
 import model.dto.OrderItemDetails;
 
 import javax.swing.*;
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -121,6 +124,8 @@ public class DashbordFormController implements Initializable {
     int discount;
     String orderId;
 
+    private Stage customerStage = new Stage();
+
     @FXML
     void btnAddItemOnAction(ActionEvent event) {
 
@@ -129,7 +134,7 @@ public class DashbordFormController implements Initializable {
     @FXML
     void btnAddOnAction(ActionEvent event) {
         if(comboItemCode.getValue()==null){
-            JOptionPane.showMessageDialog(null, "Please select an item to prepair the order...");
+            showMessage("Please select an item to prepair the order...");
             return;
         }
         if (checktxtQty()){
@@ -173,7 +178,7 @@ public class DashbordFormController implements Initializable {
                 txtDescount.setText("00");
 
             }catch (NumberFormatException e){
-                JOptionPane.showMessageDialog(null, "Please Input valid number...");
+                showMessage("Please Input valid number...");
             }
         }
     }
@@ -195,6 +200,14 @@ public class DashbordFormController implements Initializable {
 
     @FXML
     void btnNewCustomerOnAction(ActionEvent event) {
+        try {
+            customerStage.setScene(new Scene(FXMLLoader.load(getClass().getResource("/view/Customer_Management_Form.fxml"))));
+            customerStage.setTitle("Customer Management");
+            customerStage.setResizable(false);
+            customerStage.show();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
@@ -207,24 +220,28 @@ public class DashbordFormController implements Initializable {
     void btnPlaceOrderOnAction(ActionEvent event) {
         ObservableList<OrderItemDetails> items = tblOrderDetails.getItems();
         if (items.isEmpty()){
-            JOptionPane.showMessageDialog(null, "Please add Items to plase the order...");
+            showMessage("Please add Items to plase the order...");
             return;
         }
 
         Order order = createOrder(createOrderDetails());
         boolean b = dashboardManagement.addOrder(order);
         if(b){
-            JOptionPane.showMessageDialog(null, "Order has been placed successfully.....");
+            showMessage("Order has been placed successfully.....");
             clearData();
         }else {
-            JOptionPane.showMessageDialog(null, ".....");
+            showMessage("Order has not been placed...Please try again");
         }
 
     }
 
     @FXML
     void btnRefreshOnAction(ActionEvent event) {
-
+        loadItemCode();
+        loadCustId();
+        loadDate();
+        clearData();
+        showMessage("Page Refreshed...");
     }
 
     @FXML
@@ -232,7 +249,7 @@ public class DashbordFormController implements Initializable {
         TableView.TableViewSelectionModel<OrderItemDetails> selectionModel = tblOrderDetails.getSelectionModel();
         OrderItemDetails selectedItem = selectionModel.getSelectedItem();
         if(selectedItem == null){
-            JOptionPane.showMessageDialog(null, "Please select an item to remove...");
+            showMessage("Please select an item to remove...");
             return;
         }
         orderItemDetailList = tblOrderDetails.getItems();
@@ -284,7 +301,7 @@ public class DashbordFormController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        lblDate.setText(getData().toString());
+        loadDate();
         loadCustId();
         loadItemCode();
 
@@ -299,6 +316,10 @@ public class DashbordFormController implements Initializable {
 
         generateOrderId();
 
+    }
+
+    private void loadDate() {
+        lblDate.setText(getData().toString());
     }
 
     private LocalDate getData(){
@@ -316,7 +337,7 @@ public class DashbordFormController implements Initializable {
 
     private boolean checktxtQty(){
         if (txtQty.getText() == null || txtQty.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Please Enter Item QTY...");
+            showMessage("Please Enter Item QTY...");
             return false;
         }
         return true;
@@ -396,6 +417,10 @@ public class DashbordFormController implements Initializable {
             ));
         }
         return orderDetailArrayList;
+    }
+
+    private void showMessage(String message){
+        JOptionPane.showMessageDialog(null, message);
     }
 
 

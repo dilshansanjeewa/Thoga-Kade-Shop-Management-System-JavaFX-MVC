@@ -4,8 +4,6 @@ import javafx.collections.ObservableList;
 import model.dto.Item;
 import model.dto.Order;
 
-import java.time.LocalDate;
-
 public interface DashboardManagementInterface {
     ObservableList<String> getAllCustomerId();
 
